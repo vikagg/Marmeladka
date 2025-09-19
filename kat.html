@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин сладостей</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <img src=".\\img/orig.png" alt="Логотип магазина">
+        <div>
+            <a href="html.html">Авторизация</a>
+            <a href="mar.html">Мармеладка</a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="carousel-container">
+            <div class="carousel-track" id="carouselTrack">
+
+                <div class="carousel-slide">
+                    <div class="card-container">
+                        <div class="card">
+                            <img src=".\\img/halal_yaichnitsa_banka.jpg" alt="Халяльная яичница в банке">
+                            <div class="card-body">
+                                <h5 class="card-title">Халяльная яичница в банке</h5>
+                                <p class="card-text">Отличный перекус для тех, кто следит за питанием.</p>
+                                <div>
+                                    <p>Цена 100000р/ 100г</p><button class="buy-button">Купить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src=".\\img/palochki_korotkiye_yedinorozhki.jpg" alt="Короткие палочки Единорожки">
+                            <div class="card-body">
+                                <h5 class="card-title">Короткие палочки "Единорожки"</h5>
+                                <p class="card-text">Яркие и вкусные лакомства для детей.</p>
+                                <div>
+                                    <p>Цена 100000р/ 100г</p><button class="buy-button">Купить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src=".\\img/palochki_yogurt.jpg" alt="Палочки со вкусом йогурта">
+                            <div class="card-body">
+                                <h5 class="card-title">Палочки со вкусом йогурта</h5>
+                                <p class="card-text">Нежный и освежающий вкус манго в каждой трубочке.</p>
+                                <div>
+                                    <p>Цена 100000р/ 100г</p><button class="buy-button">Купить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-slide">
+                    <div class="card-container">
+                        <div class="card">
+                            <img src=".\\img/plastinki_arbuz.jpg" alt="Пластинки со вкусом арбуза">
+                            <div class="card-body">
+                                <h5 class="card-title">Пластинки со вкусом арбуза</h5>
+                                <p class="card-text">Легкий и фруктовый вкус.</p>
+                                <div>
+                                    <p>Цена 100000р/ 100г</p><button class="buy-button">Купить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src=".\\img/plastinki_klubnika.jpg" alt="Пластинки со вкусом клубники">
+                            <div class="card-body">
+                                <h5 class="card-title">Пластинки со вкусом клубники</h5>
+                                <p class="card-text">Насыщенный ягодный вкус.</p>
+                                <div>
+                                    <p>Цена 100000р/ 100г</p><button class="buy-button">Купить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src=".\\img/zhgutiki_arbuz.jpg" alt="Жгутики">
+                            <div class="card-body">
+                                <h5 class="card-title">Жгутики</h5>
+                                <p class="card-text">Интересная форма и приятный вкус.</p>
+                                <div>
+                                    <p>Цена 100000р/ 100г</p><button class="buy-button">Купить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-slide">
+                    <div class="card-container">
+                        <div class="card">
+                            <img src=".\\img/zhgutiki_yedinorozhki.jpg" alt="Жгутики Единорожки Docile">
+                            <div class="card-body">
+                                <h5 class="card-title">Жгутики "Единорожки"</h5>
+                                <p class="card-text">Яркие цвета и необычный вкус, отличное детское угощение.</p>
+                                <div>
+                                    <p>Цена 100000р/ 100г</p><button class="buy-button">Купить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src=".\\img/zmeyki_minihua.jpg" alt="Змейки Minihua">
+                            <div class="card-body">
+                                <h5 class="card-title">Змейки Minihua</h5>
+                                <p class="card-text">Маленькие и вкусные змейки для перекуса.</p>
+                                <div>
+                                    <p>Цена 100000р/ 100г</p><button class="buy-button">Купить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-button" onclick="moveCarousel(-1)">&#10094;</button>
+                <button class="carousel-button" onclick="moveCarousel(1)">&#10095;</button>
+            </div>
+        </div>
+    </div>
+    <footer>Практическая1//Злобина Виктория//Магазин мармелада
+    </footer>
+    <script>
+        const carouselTrack = document.getElementById('carouselTrack');
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const slideWidth = slides[0].offsetWidth;
+
+        function moveCarousel(direction) {
+            slideIndex += direction;
+            if (slideIndex < 0) {
+                slideIndex = slides.length - 1;
+            } else if (slideIndex >= slides.length) {
+                slideIndex = 0;
+            }
+
+            carouselTrack.style.transform = `translateX(${-slideIndex * slideWidth}px)`;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,178 @@
+ body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ff99cc, #cc99ff);
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        header img {
+            max-width: 60px;
+            height: auto;
+        }
+
+        header div {
+            margin-top: 10px;
+        }
+
+        header a {
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            background-color: #76c8f2;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        header a:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .kat {
+            padding: 30px;
+            margin: 30px;
+            text-align: center;
+        }
+
+        .hhh {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            max-width: 400px;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+            position: relative; 
+        }
+
+        .hhh:hover {
+            transform: translateY(-5px);
+        }
+
+        .hhh img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .card-text {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .buy-button {
+            background-color: #76c8f2; 
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease; 
+        }
+        form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input{
+            margin: 5px;
+        }
+
+        .buy-button:hover {
+            background-color: #4caede; 
+        }
+
+        footer {
+            background-color: #76c8f2;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+        .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .card {
+        width: 18rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .carousel-container {
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .carousel-track {
+        display: flex;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .carousel-slide {
+        flex: 0 0 100%;
+    }
+
+    .carousel-controls {
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 60px;
+    }
+
+    .carousel-button {
+        background-color: #ddd;
+        border: none;
+        padding: 5px 10px;
+        margin: 0 5px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
