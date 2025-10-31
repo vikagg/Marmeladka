@@ -1,29 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Магазин сладостей</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Магазин Мармелада</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="https://vbjrfcgxzwjsgyadxlql.supabase.co/storage/v1/object/public/Marmeladka/orig.png">
 </head>
-
 <body>
     <header>
-        <a class="logo" href= 'login.html'> <img src="https://vbjrfcgxzwjsgyadxlql.supabase.co/storage/v1/object/public/Marmeladka/orig.png" alt="Логотип магазина" ></a>
-        <div>
-            <a href="login.html" class="header">Авторизация</a>
-        </div>
-    </header>
-    <main>
-        <h1>Каталог товаров</h1>
-        <div class="cards"></div>
-      </main>
-    
-      <footer>
-            <p>Практическая работа x//  Злобина Виктория // Магазин мармелада</p>
-      </footer>
-    <script type="module" src="/js/main.js"></script>
-</body>
+  <div class="logo">
+    <img src="https://vbjrfcgxzwjsgyadxlql.supabase.co/storage/v1/object/public/Marmeladka/orig.png" >
+  </div>
+  <nav>
+    <a href="index.html" class="n-adm-btn" >Главная</a>
+    <a href="login.html" class="n-adm-btn">Вход</a>
+  </nav>
+</header>
 
+  <main>
+    <section class="catalog">
+      <h2>Каталог мармелада</h2>
+      <div class="cards">
+        
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Практическая работа х // Злобина Виктория // Магазин Мармелада
+  </footer>
+  
+<script src="/server/main.js"></script>
+</body>
 </html>
