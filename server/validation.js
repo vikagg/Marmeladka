@@ -1,16 +1,48 @@
-
-export function validateLogin(login) {
-    if (!login,  login.length < 3) return 'Логин должен быть не менее 3 символов';
-    return null;
-  }
-  
-export function validatePassword(password) {
-    if (!password,  password.length < 6) return 'Пароль должен быть не менее 6 символов';
-    return null;
-  }
-  
 export function validateForm(login, password) {
-    const loginError = validateLogin(login);
-    const passwordError = validatePassword(password);
-    return { loginError, passwordError, isValid: !loginError && !passwordError };
-  }
+    const isValid = login.length >= 3 && password.length >= 6;
+    return { isValid };
+}
+
+export async function loginUser(login, password) {
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ login, password })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            localStorage.setItem('currentUser', JSON.stringify(result.user));
+        }
+        
+        return result;
+    } catch (error) {
+        return { success: false, error: 'Ошибка сети' };
+    }
+}
+
+export async function registerUser(login, password, name) {
+    try {
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ login, password, name })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            localStorage.setItem('currentUser', JSON.stringify(result.user));
+        }
+        
+        return result;
+    } catch (error) {
+        return { success: false, error: 'Ошибка сети' };
+    }
+}
