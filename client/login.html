@@ -1,31 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Магазин Сладостей</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Магазин Мармелада</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="https://vbjrfcgxzwjsgyadxlql.supabase.co/storage/v1/object/public/Marmeladka/orig.png">
 </head>
-
-<body>
-    <header><a href= 'login.html' class="logo"> <img src="https://vbjrfcgxzwjsgyadxlql.supabase.co/storage/v1/object/public/Marmeladka/orig.png" alt="Логотип магазина" ></a>
-        <div> <a href="index.html" class="header">Каталог</a> </div>
-    </header>
-    <div class="kat">
-        <div class="hhh">
-            <h1>Авторизация</h1>
-            <form class="mars-once">
-                <input type="text" placeholder="Логин" required>
-                <input type="password" placeholder="Пароль" required>
-                <button type="submit" class="bt">Войти</button>
-            </form>
-            <div class="txr">Ещё не зарегистрированы?</div>
-            <a href="reg.html" class="bt">Зарегистрироваться</a>
+<body >
+<header>
+  <div class="logo">
+    <img src="https://vbjrfcgxzwjsgyadxlql.supabase.co/storage/v1/object/public/Marmeladka/orig.png" >
+  </div>
+  <nav>
+    <a href="index.html" class="n-adm-btn" >Главная</a>
+    <a href="login.html" class="n-adm-btn">Вход</a>
+  </nav>
+</header>
+  <main class="centered">
+    <div class="form-container">
+      <form id="authForm">
+        <input type="text" id="login" placeholder="Логин" required>
+        <input type="password" id="password" placeholder="Пароль" required>
+        <div id="nameField" style="display:none;">
+          <input type="text" id="name" placeholder="Имя">
         </div>
+        <div class="button-group">
+          <button type="submit" id="submitBtn">Войти</button>
+          <button class="button" type="button" id="switchMode">Нет аккаунта? Регистрация</button>
+        </div>
+      </form>
     </div>
-    <footer>Практическая x //Злобина Виктория//Магазин мармелада
-    </footer>
-    <script type="module" src="/js/main.js"></script>
+  </main>
+
+  <footer>
+   Практическая работа х // Злобина Виктория // Магазин Мармелада
+  </footer>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('authForm');
+        const loginInput = document.getElementById('login');
+        const passwordInput = document.getElementById('password');
+        const nameInput = document.getElementById('name');
+        const nameField = document.getElementById('nameField');
+        const switchModeBtn = document.getElementById('switchMode');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        let isLoginMode = true;
+
+        switchModeBtn.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            nameField.style.display = isLoginMode ? 'none' : 'block';
+            submitBtn.textContent = isLoginMode ? 'Войти' : 'Зарегистрироваться';
+            switchModeBtn.textContent = isLoginMode ? 'Нет аккаунта? Регистрация' : 'Уже есть аккаунт? Войти';
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (loginInput.value.length < 3 || passwordInput.value.length < 6) {
+                alert('Ошибка! Логин - минимум 3 символа, пароль - минимум 6 символов');
+                return;
+            }
+
+            try {
+                if (isLoginMode) {
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            login: loginInput.value, 
+                            password: passwordInput.value 
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert(`Добро пожаловать, ${result.user.name}!`);
+                        localStorage.setItem('currentUser', JSON.stringify(result.user));
+                        
+                        if (result.user.role === 'admin') {
+                            window.location.href = 'admin.html';
+                        } else {
+                            window.location.href = 'index.html';
+                        }
+                    } else {
+                        alert(result.error);
+                    }
+                } else {
+                    const name = nameInput.value.trim();
+                    if (!name) {
+                        alert('Введите имя!');
+                        return;
+                    }
+                    
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            login: loginInput.value, 
+                            password: passwordInput.value,
+                            name: name
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Регистрация успешна!');
+                        localStorage.setItem('currentUser', JSON.stringify(result.user));
+                        window.location.href = 'index.html';
+                    } else {
+                        alert(result.error);
+                    }
+                }
+            } catch (error) {
+                alert('Ошибка сети! Проверьте подключение к серверу');
+            }
+        });
+    });
+  </script>
 </body>
 </html>
