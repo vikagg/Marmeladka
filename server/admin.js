@@ -1,3 +1,4 @@
+
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 if (!currentUser || currentUser.role !== 'admin') {
   alert('Доступ запрещён!');
@@ -22,7 +23,7 @@ class SupabaseUploader {
     async uploadFile(file) {
         try {
             const fileName = this.generateFileName(file);
-            
+
             const { data, error } = await this.supabase.storage
                 .from(this.bucketName)
                 .upload(fileName, file);
@@ -40,7 +41,7 @@ class SupabaseUploader {
                 url: publicUrlData.publicUrl,
                 fileName: fileName
             };
-            
+
         } catch (error) {
             console.error('Ошибка загрузки на Supabase:', error);
             return {
@@ -53,13 +54,14 @@ class SupabaseUploader {
 
 const uploader = new SupabaseUploader();
 
+// --- PRODUCT MANAGEMENT ---
 async function getProducts() {
     try {
         const response = await fetch('/api/products');
         if (!response.ok) return [];
         return await response.json();
     } catch (error) {
-        console.error('Ошибка:', error);
+        console.error('Ошибка получения продуктов:', error);
         return [];
     }
 }
@@ -108,7 +110,7 @@ function setupImageUpload() {
 
   fileInput.addEventListener('change', async (event) => {
     const file = event.target.files[0];
-    
+
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
@@ -122,7 +124,7 @@ function setupImageUpload() {
       uploadStatus.className = 'upload-status';
 
       const result = await uploader.uploadFile(file);
-      
+
       if (result.success) {
         imageInput.value = result.url;
         uploadStatus.textContent = 'Успешно загружено!';
@@ -182,20 +184,18 @@ async function addProduct(e) {
 
 async function deleteProduct(id) {
   if (confirm('Удалить этот товар?')) {
-    const products = await getProducts();
-    const updatedProducts = products.filter(p => String(p.id) !== String(id));
-    
     try {
-      await fetch('/api/products/update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedProducts)
+      const response = await fetch(`/api/products/${id}`, {
+        method: 'DELETE'
       });
-      renderProducts();
+
+      if (response.ok) {
+        renderProducts();
+      } else {
+        alert('Ошибка при удалении товара');
+      }
     } catch (error) {
-      alert('Ошибка при удалении товара');
+      alert('Ошибка сети');
     }
   }
 }
@@ -212,22 +212,29 @@ async function editProduct(id) {
   const image = prompt('Новая ссылка на фото:', product.image);
 
   if (name && description && price && image) {
-    product.name = name;
-    product.description = description;
-    product.price = Number(price);
-    product.image = image;
-    
+    const updatedProduct = {
+      name,
+      description,
+      price: Number(price),
+      image
+    };
+
     try {
-      await fetch('/api/products/update', {
-        method: 'POST',
+      const response = await fetch(`/api/products/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(products)
+        body: JSON.stringify(updatedProduct)
       });
-      renderProducts();
+
+      if (response.ok) {
+        renderProducts();
+      } else {
+        alert('Ошибка при редактировании товара');
+      }
     } catch (error) {
-      alert('Ошибка при редактировании товара');
+      alert('Ошибка сети');
     }
   }
 }
@@ -235,3 +242,215 @@ async function editProduct(id) {
 document.querySelector('#productForm').addEventListener('submit', addProduct);
 setupImageUpload();
 renderProducts();
+
+
+// --- USER MANAGEMENT ---
+
+async function getUsers() {
+    try {
+        const response = await fetch('/api/users');
+        if (!response.ok) {
+            console.error('Ошибка при получении пользователей:', response.status, response.statusText);
+            return [];
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Ошибка при получении пользователей (сеть или парсинг JSON):', error);
+        return [];
+    }
+}
+
+async function renderUsers() {
+    const users = await getUsers();
+    const tableBody = document.querySelector('#userTable tbody');
+
+    if (!tableBody) {
+        console.warn('Не найден элемент tbody с id "userTable tbody". Проверьте HTML структуру.');
+        return;
+    }
+
+    if (!users || users.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6">Пользователей нет</td></tr>';
+        return;
+    }
+
+    tableBody.innerHTML = users.map((user, i) => `
+        <tr>
+            <td>${i + 1}</td>
+            <td>${user.username}</td>
+            <td>${user.password}</td>
+            <td>${user.name}</td>
+            <td>${user.role}</td>
+            <td>
+                <button class="edit-user-btn action-btn" data-id="${user.id}">✏️</button>
+                <button class="delete-user-btn action-btn" data-id="${user.id}">🗑️</button>
+            </td>
+        </tr>
+    `).join('');
+
+    // Добавляем слушатели событий для кнопок редактирования
+    document.querySelectorAll('.edit-user-btn').forEach(btn =>
+        btn.addEventListener('click', () => editUser(btn.dataset.id))
+    );
+
+    // Добавляем слушатели событий для кнопок удаления
+    document.querySelectorAll('.delete-user-btn').forEach(btn =>
+        btn.addEventListener('click', () => deleteUser(btn.dataset.id))
+    );
+}
+
+async function editUser(id) {
+    const users = await getUsers();
+    const user = users.find(u => String(u.id) === String(id));
+
+    if (!user) {
+        alert('Пользователь с таким ID не найден.');
+        return;
+    }
+
+    const username = prompt('Введите новый логин:', user.username);
+    if (username === null) return;
+
+    const name = prompt('Введите новое имя:', user.name);
+    if (name === null) return;
+
+    const role = prompt('Введите новую роль (admin или user):', user.role);
+    if (role === null) return;
+
+    const password = prompt('Введите новый пароль (оставьте пустым, чтобы не менять):', '');
+    if (password === null) return;
+
+    // Валидация введенных данных
+    if (username.trim() && name.trim() && (role.trim() === 'admin' || role.trim() === 'user')) {
+        const updatedUser = {
+            username: username.trim(),
+            name: name.trim(),
+            role: role.trim()
+        };
+
+        // Добавляем пароль только если он был введен
+        if (password.trim() !== '') {
+            updatedUser.password = password.trim();
+        }
+
+        try {
+            const response = await fetch(`/api/users/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedUser)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Пользователь успешно обновлен!');
+                renderUsers();
+            } else {
+                alert(`Ошибка при редактировании пользователя: ${result.error}`);
+            }
+        } catch (error) {
+            alert('Ошибка сети при редактировании пользователя');
+            console.error('Ошибка сети при редактировании пользователя:', error);
+        }
+    } else {
+        alert('Неверные данные. Логин и имя не должны быть пустыми, а роль должна быть "admin" или "user".');
+    }
+}
+
+async function deleteUser(id) {
+    if (!confirm('Вы уверены, что хотите удалить этого пользователя?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/users/${id}`, {
+            method: 'DELETE'
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert('Пользователь успешно удален!');
+            renderUsers();
+        } else {
+            alert(`Ошибка при удалении пользователя: ${result.error}`);
+        }
+    } catch (error) {
+        alert('Ошибка сети при удалении пользователя');
+        console.error('Ошибка сети при удалении пользователя:', error);
+    }
+}
+
+async function addUser(e) {
+    e.preventDefault();
+
+    const usernameInput = document.querySelector('#userLogin');
+    const nameInput = document.querySelector('#userName');
+    const roleInput = document.querySelector('#userRole');
+    const passwordInput = document.querySelector('#userPassword');
+
+    if (!usernameInput || !nameInput || !roleInput || !passwordInput) {
+        console.error('Один или несколько элементов формы не найдены в HTML!');
+        alert('Ошибка в настройке формы. Пожалуйста, проверьте HTML.');
+        return;
+    }
+
+    const username = usernameInput.value.trim();
+    const name = nameInput.value.trim();
+    const role = roleInput.value;
+    const password = passwordInput.value.trim();
+
+    if (!username || !name || !role || !password) {
+        alert('Пожалуйста, заполните все поля для добавления пользователя!');
+        return;
+    }
+
+    if (role !== 'admin' && role !== 'user') {
+        alert('Роль может быть только "admin" или "user"');
+        return;
+    }
+
+    const newUser = {
+        username: username,
+        password: password,
+        name: name,
+        role: role
+    };
+
+    try {
+        const response = await fetch('/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newUser)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert('Пользователь успешно добавлен!');
+            renderUsers();
+            e.target.reset();
+        } else {
+            alert(`Ошибка при добавлении пользователя: ${result.error}`);
+        }
+    } catch (error) {
+        alert('Ошибка сети при добавлении пользователя');
+        console.error('Ошибка сети при добавлении пользователя:', error);
+    }
+}
+
+// --- Инициализация при загрузке страницы ---
+document.addEventListener('DOMContentLoaded', () => {
+    const userForm = document.getElementById('userForm');
+    if (userForm) {
+        userForm.addEventListener('submit', addUser);
+    } else {
+        console.warn('Не найдена форма с id "userForm". Убедитесь, что она существует в HTML.');
+    }
+
+    renderUsers();
+});

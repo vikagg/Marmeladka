@@ -44,6 +44,44 @@
       </thead>
       <tbody></tbody>
     </table>
+    <form id="userForm">
+        <h2>Добавить пользователя</h2>
+        <div>
+            <label for="userLogin">Логин:</label>
+            <input type="text" id="userLogin" required>
+        </div>
+        <div>
+            <label for="userPassword">Пароль:</label>
+            <input type="password" id="userPassword" required>
+        </div>
+        <div>
+            <label for="userName">Имя:</label>
+            <input type="text" id="userName" required>
+        </div>
+        <div>
+            <label for="userRole">Роль:</label>
+            <select id="userRole" required>
+                <option value="user">user</option>
+                <option value="admin">admin</option>
+            </select>
+        </div>
+        <button type="submit">Добавить</button>
+    </form>
+
+    <table id="userTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Логин</th>
+                <th>Пароль</th>
+                <th>Имя</th>
+                <th>Роль</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
   </main>
 
   <footer>Практическая работа x/ Злобина Виктория</footer>
